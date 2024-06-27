@@ -12,7 +12,7 @@ userInput.addEventListener("keyup", function(event) {
 });
 
 async function sendMessage() {
-  const message = userInput.value.trim(); // Remova espaços em branco extras
+  const message = userInput.value.trim(); // Remove espaços em branco extras
 
   if (message === '') return;
 
@@ -36,7 +36,7 @@ function displayMessage(message, sender) {
     messageElement.textContent = message; // Mensagem do usuário como texto
     messageElement.classList.add('user-message');
   } else if (sender === 'bot') {
-    messageElement.innerHTML = marked.parse(message); // Mensagem do bot com Markdown
+    messageElement.textContent = message; // Mensagem do bot como texto
     messageElement.classList.add('bot-message');
   }
 
@@ -67,7 +67,7 @@ function displayBotResponse(botResponse) {
   }
 
   // Exibe a mensagem formatada na interface
-  messageElement.innerHTML = marked.parse(responseText.trim());
+  messageElement.textContent = responseText.trim();
   chatMessages.appendChild(messageElement);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
@@ -76,7 +76,7 @@ const apiBaseUrl = 'https://green-tech-six.vercel.app/';
 
 async function sendMessageToServer(message) {
   try {
-    const response = await fetch(`${apiBaseUrl}`, {
+    const response = await fetch(apiBaseUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
