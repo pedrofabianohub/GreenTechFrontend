@@ -20,7 +20,7 @@ function sendMessage() {
 
   sendMessageToServer(message)
     .then(botResponse => {
-      displayMessage(botResponse.texto, 'bot');
+      displayMessage(botResponse, 'bot');
     })
     .catch(error => {
       console.error('Erro ao enviar mensagem para o servidor:', error);
@@ -60,9 +60,10 @@ async function sendMessageToServer(message) {
       throw new Error(`Erro na solicitação: ${response.status}`);
     }
 
-    const data = await response.json();
-    return data; // Retorna o objeto completo da resposta
+    const data = await response.json(); // Converter resposta JSON para objeto JavaScript
+    return data;
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
   }
 }
+
