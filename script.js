@@ -12,15 +12,17 @@ userInput.addEventListener("keyup", function(event) {
 });
 
 function sendMessage() {
-  const message = userInput.value;
-  if (message.trim() === '') return;
+  const message = userInput.value.trim(); // Remova espaços em branco extras
+
+  if (message === '') return;
 
   displayMessage(message, 'user');
   userInput.value = '';
 
   sendMessageToServer(message)
     .then(botResponse => {
-      displayMessage(botResponse, 'bot');
+      const textResponse = botResponse.resposta; // Supondo que 'resposta' é o campo de texto no JSON retornado
+      displayMessage(textResponse, 'bot');
     })
     .catch(error => {
       console.error('Erro ao enviar mensagem para o servidor:', error);
@@ -28,24 +30,7 @@ function sendMessage() {
     });
 }
 
-function displayMessage(message, sender) {
-  const messageElement = document.createElement('div');
-  messageElement.classList.add('message');
-
-  if (sender === 'user') { 
-    messageElement.textContent = message; // Mensagem do usuário como texto
-    messageElement.classList.add('user-message'); 
-  } else if (sender === 'bot') { 
-    messageElement.innerHTML = marked.parse(message); // Mensagem do bot com Markdown
-    messageElement.classList.add('bot-message'); 
-  }
-
-  chatMessages.appendChild(messageElement);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-const apiBaseUrl = 'https://green-tech-six.vercel.app/';
-
+// Certifique-se de que a função sendMessageToServer retorna o JSON completo
 async function sendMessageToServer(message) {
   try {
     const response = await fetch(`${apiBaseUrl}`, {
@@ -61,7 +46,7 @@ async function sendMessageToServer(message) {
     }
 
     const data = await response.json();
-    return data.resposta;
+    return data; // Retorna o JSON completo do servidor
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
   }
