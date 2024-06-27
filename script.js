@@ -48,6 +48,7 @@ function displayMessage(message, sender) {
 }
 
 
+
 const apiBaseUrl = 'https://green-tech-six.vercel.app/';
 
 async function sendMessageToServer(message) {
