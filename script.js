@@ -32,17 +32,22 @@ function displayMessage(message, sender) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message');
 
-  if (sender === 'user') { 
+  if (sender === 'user') {
     messageElement.textContent = message; // Mensagem do usuário como texto
-    messageElement.classList.add('user-message'); 
-  } else if (sender === 'bot') { 
-    messageElement.innerHTML = marked.parse(message); // Mensagem do bot com Markdown
-    messageElement.classList.add('bot-message'); 
+    messageElement.classList.add('user-message');
+  } else if (sender === 'bot') {
+    if (typeof message === 'string') {
+      messageElement.innerHTML = marked.parse(message); // Mensagem do bot com Markdown
+    } else {
+      messageElement.textContent = message; // Caso não seja uma string, exibe como texto simples
+    }
+    messageElement.classList.add('bot-message');
   }
 
   chatMessages.appendChild(messageElement);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
 
 const apiBaseUrl = 'https://green-tech-six.vercel.app/';
 
@@ -61,8 +66,9 @@ async function sendMessageToServer(message) {
     }
 
     const data = await response.json();
-    return data; // Retorna diretamente o texto da resposta do bot
+    return data.resposta; // Retorna diretamente a resposta como texto
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
   }
 }
+
