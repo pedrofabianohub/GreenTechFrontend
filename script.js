@@ -60,8 +60,8 @@ async function sendMessageToServer(message) {
       throw new Error(`Erro na solicitação: ${response.status}`);
     }
 
-    const data = await response.text(); // Obter a resposta como texto
-    return data; // Retornar diretamente o texto da resposta
+    const data = await response.json();
+    return data; // Retorna diretamente o texto da resposta do bot
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
   }
