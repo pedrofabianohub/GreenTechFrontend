@@ -20,7 +20,7 @@ function sendMessage() {
 
   sendMessageToServer(message)
     .then(botResponse => {
-      displayMessage(botResponse, 'bot');
+      displayMessage(botResponse.texto, 'bot');
     })
     .catch(error => {
       console.error('Erro ao enviar mensagem para o servidor:', error);
@@ -48,7 +48,7 @@ const apiBaseUrl = 'https://green-tech-six.vercel.app/';
 
 async function sendMessageToServer(message) {
   try {
-    const response = await fetch(`${apiBaseUrl}`, {
+    const response = await fetch(apiBaseUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -61,7 +61,7 @@ async function sendMessageToServer(message) {
     }
 
     const data = await response.json();
-    return data.resposta;
+    return data; // Retorna o objeto completo da resposta
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
   }
