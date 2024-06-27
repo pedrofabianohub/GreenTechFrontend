@@ -37,10 +37,9 @@ function displayMessage(message, sender) {
     messageElement.classList.add('user-message');
   } else if (sender === 'bot') {
     try {
-      const parsedMessage = JSON.parse(message); // Tentar fazer parse do JSON
-      messageElement.innerHTML = marked.parse(JSON.stringify(parsedMessage)); // Exibir o JSON formatado em Markdown
+      messageElement.innerHTML = JSON.parse(message)
     } catch (error) {
-      messageElement.innerHTML = marked.parse(message); // Se não for JSON válido, tratar como Markdown
+      messageElement.innerHTML = JSON.parse(message)
     }
     messageElement.classList.add('bot-message');
   }
@@ -67,7 +66,7 @@ async function sendMessageToServer(message) {
     }
 
     const data = await response.json();
-    return data.resposta; // Retorna diretamente o campo resposta
+    return data.resposta;
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
   }
