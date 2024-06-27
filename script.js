@@ -37,16 +37,21 @@ function displayMessage(message, sender) {
     messageElement.classList.add('user-message');
   } else if (sender === 'bot') {
     try {
-      let botResponse = message;
+      let botResponse = '';
 
-      // Se a resposta for um objeto JSON, extrair texto das propriedades
+      // Verifica se a mensagem é um objeto JSON
       if (typeof message === 'object') {
-        botResponse = '';
-        for (const key in message) {
-          if (typeof message[key] === 'string') {
-            botResponse += message[key] + ' ';
-          }
+        if (message.nome) {
+          botResponse += `<strong>${message.nome}</strong><br><br>`;
         }
+        if (message.instrucoes && Array.isArray(message.instrucoes)) {
+          botResponse += '<em>Instruções:</em><br>';
+          message.instrucoes.forEach(instrucao => {
+            botResponse += `${instrucao}<br>`;
+          });
+        }
+      } else {
+        botResponse = message; // Caso contrário, assume que é texto simples
       }
 
       messageElement.innerHTML = marked.parse(botResponse); // Exibir a resposta formatada em Markdown
@@ -60,6 +65,7 @@ function displayMessage(message, sender) {
   chatMessages.appendChild(messageElement);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
 
 
 const apiBaseUrl = 'https://green-tech-six.vercel.app/';
