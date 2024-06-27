@@ -11,21 +11,20 @@ userInput.addEventListener("keyup", function(event) {
   }
 });
 
-function sendMessage() {
-  const message = userInput.value;
-  if (message.trim() === '') return;
+async function sendMessage() {
+  const message = userInput.value.trim();
+  if (message === '') return;
 
   displayMessage(message, 'user');
   userInput.value = '';
 
-  sendMessageToServer(message)
-    .then(botResponse => {
-      displayMessage(botResponse, 'bot');
-    })
-    .catch(error => {
-      console.error('Erro ao enviar mensagem para o servidor:', error);
-      displayMessage('Erro ao conectar ao chatbot. Por favor, tente novamente.', 'bot');
-    });
+  try {
+    const botResponse = await sendMessageToServer(message);
+    displayMessage(botResponse, 'bot');
+  } catch (error) {
+    console.error('Erro ao enviar mensagem para o servidor:', error);
+    displayMessage('Erro ao conectar ao chatbot. Por favor, tente novamente.', 'bot');
+  }
 }
 
 function displayMessage(message, sender) {
@@ -62,7 +61,7 @@ function displayMessage(message, sender) {
         if (message.dicas) {
           botResponse += message.dicas + ' ';
         }
-        // Outras chaves específicas que deseja remover
+        // Outras chaves específicas que deseja processar
 
       } else {
         botResponse = message; // Se não for objeto, assume que é texto simples
@@ -81,14 +80,11 @@ function displayMessage(message, sender) {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-
-
-
 const apiBaseUrl = 'https://green-tech-six.vercel.app/';
 
 async function sendMessageToServer(message) {
   try {
-    const response = await fetch(`${apiBaseUrl}`, {
+    const response = await fetch(apiBaseUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -101,7 +97,8 @@ async function sendMessageToServer(message) {
     }
 
     const data = await response.json();
-    return data.resposta;
+    return data; // Retorna o objeto recebido da API
+
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
   }
