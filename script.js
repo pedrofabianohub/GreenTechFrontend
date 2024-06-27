@@ -46,6 +46,7 @@ function sendMessage() {
     });
 }
 
+const apiBaseUrl = 'https://green-tech-six.vercel.app/'
 // Certifique-se de que a função sendMessageToServer retorna o JSON completo
 async function sendMessageToServer(message) {
   try {
