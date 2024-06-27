@@ -21,8 +21,24 @@ function sendMessage() {
 
   sendMessageToServer(message)
     .then(botResponse => {
-      const textResponse = botResponse.resposta; // Supondo que 'resposta' é o campo de texto no JSON retornado
-      displayMessage(textResponse, 'bot');
+      let responseText = ''; // Inicializa a variável para armazenar o texto da resposta
+
+      // Concatena todas as saudações com um espaço entre elas
+      if (botResponse.saudacoes && botResponse.saudacoes.length > 0) {
+        responseText += botResponse.saudacoes.join(' ') + ' ';
+      }
+
+      // Adiciona a mensagem principal
+      if (botResponse.mensagem) {
+        responseText += botResponse.mensagem + ' ';
+      }
+
+      // Adiciona o emoji, se disponível
+      if (botResponse.emoji) {
+        responseText += botResponse.emoji;
+      }
+
+      displayMessage(responseText.trim(), 'bot'); // Exibe a mensagem formatada na interface
     })
     .catch(error => {
       console.error('Erro ao enviar mensagem para o servidor:', error);
