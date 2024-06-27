@@ -11,7 +11,7 @@ userInput.addEventListener("keyup", function(event) {
   }
 });
 
-function sendMessage() {
+async function sendMessage() {
   const message = userInput.value.trim(); // Remova espaços em branco extras
 
   if (message === '') return;
@@ -19,35 +19,61 @@ function sendMessage() {
   displayMessage(message, 'user');
   userInput.value = '';
 
-  sendMessageToServer(message)
-    .then(botResponse => {
-      let responseText = ''; // Inicializa a variável para armazenar o texto da resposta
-
-      // Concatena todas as saudações com um espaço entre elas
-      if (botResponse.saudacoes && botResponse.saudacoes.length > 0) {
-        responseText += botResponse.saudacoes.join(' ') + ' ';
-      }
-
-      // Adiciona a mensagem principal
-      if (botResponse.mensagem) {
-        responseText += botResponse.mensagem + ' ';
-      }
-
-      // Adiciona o emoji, se disponível
-      if (botResponse.emoji) {
-        responseText += botResponse.emoji;
-      }
-
-      displayMessage(responseText.trim(), 'bot'); // Exibe a mensagem formatada na interface
-    })
-    .catch(error => {
-      console.error('Erro ao enviar mensagem para o servidor:', error);
-      displayMessage('Erro ao conectar ao chatbot. Por favor, tente novamente.', 'bot');
-    });
+  try {
+    const botResponse = await sendMessageToServer(message);
+    displayBotResponse(botResponse);
+  } catch (error) {
+    console.error('Erro ao enviar mensagem para o servidor:', error);
+    displayMessage('Erro ao conectar ao chatbot. Por favor, tente novamente.', 'bot');
+  }
 }
 
-const apiBaseUrl = 'https://green-tech-six.vercel.app/'
-// Certifique-se de que a função sendMessageToServer retorna o JSON completo
+function displayMessage(message, sender) {
+  const messageElement = document.createElement('div');
+  messageElement.classList.add('message');
+
+  if (sender === 'user') {
+    messageElement.textContent = message; // Mensagem do usuário como texto
+    messageElement.classList.add('user-message');
+  } else if (sender === 'bot') {
+    messageElement.innerHTML = marked.parse(message); // Mensagem do bot com Markdown
+    messageElement.classList.add('bot-message');
+  }
+
+  chatMessages.appendChild(messageElement);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function displayBotResponse(botResponse) {
+  const messageElement = document.createElement('div');
+  messageElement.classList.add('message');
+  messageElement.classList.add('bot-message');
+
+  let responseText = ''; // Inicializa a variável para armazenar o texto da resposta
+
+  // Concatena todas as saudações com um espaço entre elas
+  if (botResponse.saudacoes && botResponse.saudacoes.length > 0) {
+    responseText += botResponse.saudacoes.join(' ') + ' ';
+  }
+
+  // Adiciona a mensagem principal
+  if (botResponse.mensagem) {
+    responseText += botResponse.mensagem + ' ';
+  }
+
+  // Adiciona o emoji, se disponível
+  if (botResponse.emoji) {
+    responseText += botResponse.emoji;
+  }
+
+  // Exibe a mensagem formatada na interface
+  messageElement.innerHTML = marked.parse(responseText.trim());
+  chatMessages.appendChild(messageElement);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+const apiBaseUrl = 'https://green-tech-six.vercel.app/';
+
 async function sendMessageToServer(message) {
   try {
     const response = await fetch(`${apiBaseUrl}`, {
