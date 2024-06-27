@@ -1,6 +1,7 @@
 const chatMessages = document.querySelector('.chat-messages');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
+import marked from 'marked';
 
 sendBtn.addEventListener('click', sendMessage);
 
@@ -44,6 +45,7 @@ function displayMessage(message, sender) {
   chatMessages.appendChild(messageElement);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
 
 const apiBaseUrl = 'https://green-tech-six.vercel.app/';
 
