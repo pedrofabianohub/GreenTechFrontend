@@ -33,7 +33,7 @@ function displayMessage(message, sender) {
   messageElement.classList.add('message');
 
   if (sender === 'user') {
-    messageElement.textContent = JSON.parse(message);
+    messageElement.textContent = message;
     messageElement.classList.add('user-message');
   } else if (sender === 'bot') {
     try {
@@ -56,7 +56,7 @@ function displayMessage(message, sender) {
 
         }
       } else {
-        botResponse = message;
+        botResponse = 'error foda';
       }
 
       messageElement.innerHTML = marked.parse(botResponse.trim()); // Exibir a resposta formatada em Markdown
