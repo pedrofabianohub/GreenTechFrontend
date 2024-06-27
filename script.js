@@ -44,11 +44,11 @@ function displayMessage(message, sender) {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-const apiBaseUrl = 'https://green-tech-six.vercel.app/mensagem';
+const apiBaseUrl = 'https://green-tech-six.vercel.app';
 
 async function sendMessageToServer(message) {
   try {
-    const response = await fetch(apiBaseUrl, {
+    const response = await fetch(`${apiBaseUrl}/mensagem`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
