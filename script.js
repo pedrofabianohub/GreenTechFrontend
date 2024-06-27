@@ -1,4 +1,3 @@
-// Restante do seu código
 const chatMessages = document.querySelector('.chat-messages');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
@@ -37,8 +36,13 @@ function displayMessage(message, sender) {
     messageElement.textContent = message; // Mensagem do usuário como texto
     messageElement.classList.add('user-message'); 
   } else if (sender === 'bot') { 
-    const botMessage = marked(message); // Processa a mensagem do bot com Markdown
-    messageElement.innerHTML = botMessage;
+    // Verificar se marked está disponível antes de usá-lo
+    if (typeof marked === 'function') {
+      const botMessage = marked(message); // Processa a mensagem do bot com Markdown
+      messageElement.innerHTML = botMessage;
+    } else {
+      messageElement.textContent = message; // Caso marked não esteja disponível, exibir como texto simples
+    }
     messageElement.classList.add('bot-message'); 
   }
 
