@@ -1,7 +1,7 @@
 const chatMessages = document.querySelector('.chat-messages');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
-import marked from 'marked';
+const marked = require('marked')
 
 sendBtn.addEventListener('click', sendMessage);
 
