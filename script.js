@@ -32,46 +32,55 @@ function displayMessage(message, sender) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message');
 
-  if (sender === 'user') {
-    messageElement.textContent = message; // Mensagem do usuário como texto
-    messageElement.classList.add('user-message');
-  } else if (sender === 'bot') {
-    try {
+  try {
+    if (sender === 'user') {
+      messageElement.textContent = message; // Mensagem do usuário como texto
+      messageElement.classList.add('user-message');
+    } else if (sender === 'bot') {
       let botResponse = '';
 
       // Verifica se a mensagem é um objeto JSON
       if (typeof message === 'object') {
-        // Itera sobre as chaves do objeto
-        for (const key in message) {
-          if (Array.isArray(message[key])) {
-            // Se for um array, concatenar seus itens como texto
-            message[key].forEach(item => {
-              if (typeof item === 'string') {
-                botResponse += item + ' ';
-              }
-            });
-          } else if (typeof message[key] === 'string') {
-            // Se for uma string, concatenar diretamente
-            botResponse += message[key] + ' ';
-          }
-          // Outras condições conforme necessário para outras estruturas de dados
+        if (message.resposta) {
+          botResponse += message.resposta + ' ';
         }
+        if (message.instrucoes && Array.isArray(message.instrucoes)) {
+          message.instrucoes.forEach(instrucao => {
+            botResponse += instrucao + ' ';
+          });
+        }
+        if (message.saudacoes && Array.isArray(message.saudacoes)) {
+          message.saudacoes.forEach(saudacao => {
+            botResponse += saudacao + ' ';
+          });
+        }
+        if (message.perguntas_frequentes && Array.isArray(message.perguntas_frequentes)) {
+          message.perguntas_frequentes.forEach(pergunta => {
+            botResponse += pergunta + ' ';
+          });
+        }
+        if (message.dicas) {
+          botResponse += message.dicas + ' ';
+        }
+        // Outras chaves específicas que deseja remover
+
       } else {
         botResponse = message; // Se não for objeto, assume que é texto simples
       }
 
       // Exibe a resposta formatada em Markdown
       messageElement.innerHTML = marked(botResponse.trim());
-    } catch (error) {
-      console.error('Erro ao processar resposta do bot:', error);
-      messageElement.textContent = 'Erro ao processar resposta do bot.';
     }
-    messageElement.classList.add('bot-message');
+  } catch (error) {
+    console.error('Erro ao processar resposta do bot:', error);
+    messageElement.textContent = 'Erro ao processar resposta do bot.';
   }
 
+  messageElement.classList.add('bot-message');
   chatMessages.appendChild(messageElement);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
 
 
 
