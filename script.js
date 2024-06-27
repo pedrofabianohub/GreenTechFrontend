@@ -44,7 +44,7 @@ function displayMessage(message, sender) {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-const apiBaseUrl = 'https://green-tech-a6gwp5t7q-pedrofabianohubs-projects.vercel.app/';
+const apiBaseUrl = 'https://green-tech-ps11yi833-pedrofabianohubs-projects.vercel.app/';
 
 async function sendMessageToServer(message) {
   try {
