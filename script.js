@@ -37,9 +37,22 @@ function displayMessage(message, sender) {
     messageElement.classList.add('user-message');
   } else if (sender === 'bot') {
     try {
-      messageElement.innerHTML = JSON.stringify(marked.parse(message))
+      let botResponse = message;
+
+      // Se a resposta for um objeto JSON, extrair texto das propriedades
+      if (typeof message === 'object') {
+        botResponse = '';
+        for (const key in message) {
+          if (typeof message[key] === 'string') {
+            botResponse += message[key] + ' ';
+          }
+        }
+      }
+
+      messageElement.innerHTML = marked.parse(botResponse); // Exibir a resposta formatada em Markdown
     } catch (error) {
-      messageElement.innerHTML = JSON.stringify(marked.parse(message))
+      console.error('Erro ao processar resposta do bot:', error);
+      messageElement.textContent = 'Erro ao processar resposta do bot.';
     }
     messageElement.classList.add('bot-message');
   }
