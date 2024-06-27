@@ -36,13 +36,7 @@ function displayMessage(message, sender) {
     messageElement.textContent = message; // Mensagem do usuário como texto
     messageElement.classList.add('user-message'); 
   } else if (sender === 'bot') { 
-    // Verificar se marked está disponível antes de usá-lo
-    if (typeof marked === 'function') {
-      const botMessage = marked(message); // Processa a mensagem do bot com Markdown
-      messageElement.innerHTML = botMessage;
-    } else {
-      messageElement.textContent = message; // Caso marked não esteja disponível, exibir como texto simples
-    }
+    messageElement.innerHTML = marked.parse(message); // Mensagem do bot com Markdown
     messageElement.classList.add('bot-message'); 
   }
 
@@ -66,8 +60,8 @@ async function sendMessageToServer(message) {
       throw new Error(`Erro na solicitação: ${response.status}`);
     }
 
-    const data = await response.json();
-    return data.resposta;
+    const data = await response.text(); // Obter a resposta como texto
+    return data; // Retornar diretamente o texto da resposta
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
   }
