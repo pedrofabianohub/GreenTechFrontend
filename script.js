@@ -37,9 +37,9 @@ function displayMessage(message, sender) {
     messageElement.classList.add('user-message');
   } else if (sender === 'bot') {
     try {
-      messageElement.innerHTML = JSON.parse(message)
+      messageElement.innerHTML = JSON.stringify(marked.parse(message))
     } catch (error) {
-      messageElement.innerHTML = JSON.parse(message)
+      messageElement.innerHTML = JSON.stringify(marked.parse(message))
     }
     messageElement.classList.add('bot-message');
   }
