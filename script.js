@@ -20,7 +20,7 @@ function sendMessage() {
 
   sendMessageToServer(message)
     .then(botResponse => {
-      displayMessage(botResponse.resposta, 'bot'); // Mostra apenas a resposta do bot
+      displayMessage(botResponse, 'bot'); // Mostra apenas a resposta do bot
     })
     .catch(error => {
       console.error('Erro ao enviar mensagem para o servidor:', error);
@@ -47,7 +47,7 @@ function displayMessage(message, sender) {
 function formatBotResponse(response) {
   // Formatação da resposta do bot
   return `
-    <p>${response}</p>
+    <p>${response.resposta}</p>
   `;
 }
 
