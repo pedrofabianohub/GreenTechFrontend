@@ -33,13 +33,12 @@ function displayMessage(message, sender) {
   messageElement.classList.add('message');
 
   if (sender === 'user') {
-    messageElement.textContent = message; // Mensagem do usuário como texto
+    messageElement.textContent = JSON.parse(message);
     messageElement.classList.add('user-message');
   } else if (sender === 'bot') {
     try {
       let botResponse = '';
 
-      // Verifica se a mensagem é um objeto JSON
       if (typeof message === 'object') {
         // Itera sobre as chaves do objeto
         for (const key in message) {
@@ -54,10 +53,10 @@ function displayMessage(message, sender) {
             // Se for uma string, concatenar diretamente
             botResponse += message[key] + ' ';
           }
-          // Outras condições conforme necessário para outras estruturas de dados
+
         }
       } else {
-        botResponse = message; // Se não for objeto, assume que é texto simples
+        botResponse = message;
       }
 
       messageElement.innerHTML = marked.parse(botResponse.trim()); // Exibir a resposta formatada em Markdown
