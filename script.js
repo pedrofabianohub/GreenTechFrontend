@@ -1,7 +1,6 @@
 const chatMessages = document.querySelector('.chat-messages');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
-import { Marked } from "marked";
 
 sendBtn.addEventListener('click', sendMessage);
 
@@ -37,10 +36,8 @@ function displayMessage(message, sender) {
     messageElement.textContent = message; // Mensagem do usuário como texto
     messageElement.classList.add('user-message'); 
   } else if (sender === 'bot') { 
-    if (typeof message === 'object') {
-      message = message.resposta; // Assumindo que a resposta do bot está em message.resposta
-    }
-    messageElement.innerHTML = marked(message); // Converter mensagem para HTML usando marked
+    const botMessage = marked(message); // Processa a mensagem do bot com Markdown
+    messageElement.innerHTML = botMessage;
     messageElement.classList.add('bot-message'); 
   }
 
@@ -48,13 +45,11 @@ function displayMessage(message, sender) {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-
-
 const apiBaseUrl = 'https://green-tech-six.vercel.app/';
 
 async function sendMessageToServer(message) {
   try {
-    const response = await fetch(apiBaseUrl, {
+    const response = await fetch(`${apiBaseUrl}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -66,10 +61,9 @@ async function sendMessageToServer(message) {
       throw new Error(`Erro na solicitação: ${response.status}`);
     }
 
-    const data = await response.json(); // Converter resposta JSON para objeto JavaScript
-    return data;
+    const data = await response.json();
+    return data.resposta;
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
   }
 }
-
