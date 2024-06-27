@@ -41,30 +41,21 @@ function displayMessage(message, sender) {
 
       // Verifica se a mensagem é um objeto JSON
       if (typeof message === 'object') {
-        // Remover chaves específicas e extrair texto
-        if (message.resposta) {
-          botResponse += message.resposta + ' ';
+        // Itera sobre as chaves do objeto
+        for (const key in message) {
+          if (Array.isArray(message[key])) {
+            // Se for um array, concatenar seus itens como texto
+            message[key].forEach(item => {
+              if (typeof item === 'string') {
+                botResponse += item + ' ';
+              }
+            });
+          } else if (typeof message[key] === 'string') {
+            // Se for uma string, concatenar diretamente
+            botResponse += message[key] + ' ';
+          }
+          // Outras condições conforme necessário para outras estruturas de dados
         }
-        if (message.instrucoes && Array.isArray(message.instrucoes)) {
-          message.instrucoes.forEach(instrucao => {
-            botResponse += instrucao + ' ';
-          });
-        }
-        if (message.saudacoes && Array.isArray(message.saudacoes)) {
-          message.saudacoes.forEach(saudacao => {
-            botResponse += saudacao + ' ';
-          });
-        }
-        if (message.perguntas_frequentes && Array.isArray(message.perguntas_frequentes)) {
-          message.perguntas_frequentes.forEach(pergunta => {
-            botResponse += pergunta + ' ';
-          });
-        }
-        if (message.dicas) {
-          botResponse += message.dicas + ' ';
-        }
-        // Outras chaves específicas que deseja remover
-
       } else {
         botResponse = message; // Se não for objeto, assume que é texto simples
       }
@@ -80,6 +71,7 @@ function displayMessage(message, sender) {
   chatMessages.appendChild(messageElement);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
 
 const apiBaseUrl = 'https://green-tech-six.vercel.app/';
 
