@@ -20,7 +20,7 @@ function sendMessage() {
 
   sendMessageToServer(message)
     .then(botResponse => {
-      displayMessage(botResponse, 'bot');
+      displayMessage(botResponse.resposta, 'bot'); // Mostra apenas a resposta do bot
     })
     .catch(error => {
       console.error('Erro ao enviar mensagem para o servidor:', error);
@@ -36,12 +36,19 @@ function displayMessage(message, sender) {
     messageElement.textContent = message; // Mensagem do usuário como texto
     messageElement.classList.add('user-message'); 
   } else if (sender === 'bot') { 
-    messageElement.innerHTML = marked.parse(message); // Mensagem do bot com Markdown
+    messageElement.innerHTML = formatBotResponse(message); // Mensagem do bot formatada
     messageElement.classList.add('bot-message'); 
   }
 
   chatMessages.appendChild(messageElement);
   chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function formatBotResponse(response) {
+  // Formatação da resposta do bot
+  return `
+    <p>${response}</p>
+  `;
 }
 
 const apiBaseUrl = 'https://green-tech-six.vercel.app/';
@@ -61,7 +68,7 @@ async function sendMessageToServer(message) {
     }
 
     const data = await response.json();
-    return data.resposta;
+    return data; // Retorna o objeto completo da resposta da API
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
   }
