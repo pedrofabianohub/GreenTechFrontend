@@ -36,13 +36,17 @@ function displayMessage(message, sender) {
     messageElement.textContent = message; // Mensagem do usuário como texto
     messageElement.classList.add('user-message'); 
   } else if (sender === 'bot') { 
-    messageElement.innerHTML = marked.parse(message); // Mensagem do bot com Markdown
+    if (typeof message === 'object') {
+      message = message.resposta; // Assumindo que a resposta do bot está em message.resposta
+    }
+    messageElement.innerHTML = marked(message); // Converter mensagem para HTML usando marked
     messageElement.classList.add('bot-message'); 
   }
 
   chatMessages.appendChild(messageElement);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
 
 const apiBaseUrl = 'https://green-tech-six.vercel.app/';
 
