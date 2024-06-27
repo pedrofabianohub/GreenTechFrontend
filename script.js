@@ -11,71 +11,35 @@ userInput.addEventListener("keyup", function(event) {
   }
 });
 
-async function sendMessage() {
-  const message = userInput.value.trim();
-  if (message === '') return;
+function sendMessage() {
+  const message = userInput.value;
+  if (message.trim() === '') return;
 
   displayMessage(message, 'user');
   userInput.value = '';
 
-  try {
-    const botResponse = await sendMessageToServer(message);
-    displayMessage(botResponse, 'bot');
-  } catch (error) {
-    console.error('Erro ao enviar mensagem para o servidor:', error);
-    displayMessage('Erro ao conectar ao chatbot. Por favor, tente novamente.', 'bot');
-  }
+  sendMessageToServer(message)
+    .then(botResponse => {
+      displayMessage(botResponse, 'bot');
+    })
+    .catch(error => {
+      console.error('Erro ao enviar mensagem para o servidor:', error);
+      displayMessage('Erro ao conectar ao chatbot. Por favor, tente novamente.', 'bot');
+    });
 }
 
 function displayMessage(message, sender) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message');
 
-  try {
-    if (sender === 'user') {
-      messageElement.textContent = message; // Mensagem do usuário como texto
-      messageElement.classList.add('user-message');
-    } else if (sender === 'bot') {
-      let botResponse = '';
-
-      // Verifica se a mensagem é um objeto JSON
-      if (typeof message === 'object') {
-        if (message.resposta) {
-          botResponse += message.resposta + ' ';
-        }
-        if (message.instrucoes && Array.isArray(message.instrucoes)) {
-          message.instrucoes.forEach(instrucao => {
-            botResponse += instrucao + ' ';
-          });
-        }
-        if (message.saudacoes && Array.isArray(message.saudacoes)) {
-          message.saudacoes.forEach(saudacao => {
-            botResponse += saudacao + ' ';
-          });
-        }
-        if (message.perguntas_frequentes && Array.isArray(message.perguntas_frequentes)) {
-          message.perguntas_frequentes.forEach(pergunta => {
-            botResponse += pergunta + ' ';
-          });
-        }
-        if (message.dicas) {
-          botResponse += message.dicas + ' ';
-        }
-        // Outras chaves específicas que deseja processar
-
-      } else {
-        botResponse = message; // Se não for objeto, assume que é texto simples
-      }
-
-      // Exibe a resposta formatada em Markdown
-      messageElement.innerHTML = marked(botResponse.trim());
-    }
-  } catch (error) {
-    console.error('Erro ao processar resposta do bot:', error);
-    messageElement.textContent = 'Erro ao processar resposta do bot.';
+  if (sender === 'user') { 
+    messageElement.textContent = message; // Mensagem do usuário como texto
+    messageElement.classList.add('user-message'); 
+  } else if (sender === 'bot') { 
+    messageElement.innerHTML = marked.parse(message); // Mensagem do bot com Markdown
+    messageElement.classList.add('bot-message'); 
   }
 
-  messageElement.classList.add('bot-message');
   chatMessages.appendChild(messageElement);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
@@ -84,7 +48,7 @@ const apiBaseUrl = 'https://green-tech-six.vercel.app/';
 
 async function sendMessageToServer(message) {
   try {
-    const response = await fetch(apiBaseUrl, {
+    const response = await fetch(`${apiBaseUrl}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -97,8 +61,7 @@ async function sendMessageToServer(message) {
     }
 
     const data = await response.json();
-    return data; // Retorna o objeto recebido da API
-
+    return data.resposta;
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
   }
