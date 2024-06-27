@@ -1,0 +1,97 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #e5ded8; 
+  display: flex;
+  align-items: center;
+  min-height: 100vh; 
+  /* Removemos a margem automática para o body */
+}
+
+.chat-container {
+  width: 100%; /* Ocupa a largura total da tela */
+  height: 100vh; /* Ocupa a altura total da tela */
+  margin: 0;   /* Remove a margem */
+  background-color: transparent; 
+  display: flex; /* Ativamos o flexbox no container */
+  flex-direction: column; /* Definimos a direção para coluna */
+}
+
+.chat-header {
+  background-color: #4CAF50; 
+  color: #fff;
+  padding: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  text-align: center;
+}
+
+.chat-messages {
+  padding: 20px; 
+  flex: 1; /* Permite que as mensagens ocupem o espaço disponível */
+  flex-direction: column-reverse;
+  overflow-y: auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 60px; /* Espaço para o input fixo */
+}
+
+.message {
+  margin-bottom: 15px;
+  padding: 10px 15px; 
+  border-radius: 20px;
+  max-width: 80%;
+  word-break: break-word;
+}
+
+.chat-messages .message.user-message { 
+  background-color: #42B869;
+  color: aliceblue;
+  align-self: flex-end;
+  margin-left: 250px;
+}
+
+.bot-message {
+  background-color: #e8f5e9; 
+  align-self: flex-start; /* Alinha à esquerda no flexbox */
+}
+
+.chat-input {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #fff; 
+  border-top: 1px solid #ccc;
+  position: fixed; /* Fixa o input na parte inferior da tela */
+  bottom: 0;
+  left: 0;
+  width: 100%; 
+}
+
+#user-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  margin-right: 10px; 
+}
+
+#send-btn {
+  background-color: transparent; /* Sem cor de fundo */
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+/* Esconde o ícone padrão do botão, caso exista */
+#send-btn::-ms-browse {
+  display: none;
+}
+
+/* Estilo para o ícone do botão de enviar */
+#send-btn img {
+  width: 20px; 
+  height: 20px;
+}
