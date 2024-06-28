@@ -37,7 +37,7 @@ function displayMessage(message, sender) {
 }
 
 async function sendMessageToServer(message) {
-  const response = await fetch('/mensagem', {
+  const response = await fetch('https://green-tech-six.vercel.app/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
