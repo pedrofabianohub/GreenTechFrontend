@@ -19,16 +19,13 @@ function sendMessage() {
   userInput.value = '';
 
   sendMessageToServer(message)
-    .then(responseText => { 
-      // 1. Converte a resposta do servidor (string) para um objeto JSON
+    .then(responseText => {
       const responseObject = JSON.parse(responseText);
-
-      // 2. Acessa a propriedade 'resposta' do objeto JSON
       const botResponse = responseObject.resposta;
 
-      // Processa a resposta do bot para texto simples
-      const plainTextResponse = botResponse.replace(/<[^>]+>/g, ' ').replace(/(\r\n|\n|\r)/gm, " ");
-      displayMessage(plainTextResponse, 'bot'); 
+      // Formata a resposta do bot com markdown
+      const formattedResponse = marked.parse(botResponse);
+      displayMessage(formattedResponse, 'bot'); 
     })
     .catch(error => {
       console.error('Erro ao enviar mensagem para o servidor:', error);
@@ -44,7 +41,8 @@ function displayMessage(message, sender) {
     messageElement.textContent = message; 
     messageElement.classList.add('user-message'); 
   } else if (sender === 'bot') {
-    messageElement.textContent = message; // Adiciona a resposta como texto
+    // Define o HTML da resposta formatada com `marked`
+    messageElement.innerHTML = message; 
     messageElement.classList.add('bot-message');
   }
 
