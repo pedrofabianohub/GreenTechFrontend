@@ -29,7 +29,11 @@ function sendMessage() {
 }
 
 function displayMessage(message, sender) {
-  // ... (código idêntico ao exemplo anterior)
+  const messageElement = document.createElement('div');
+  messageElement.classList.add('message', `${sender}-message`);
+  messageElement.textContent = message;
+  chatMessages.appendChild(messageElement);
+  chatMessages.scrollTop = chatMessages.scrollHeight; // Rola para a última mensagem
 }
 
 async function sendMessageToServer(message) {
