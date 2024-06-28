@@ -2,9 +2,6 @@ const chatMessages = document.querySelector('.chat-messages');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
 
-// Importar a biblioteca marked se ainda não estiver importada
-// import marked from 'marked'; 
-
 sendBtn.addEventListener('click', sendMessage);
 
 userInput.addEventListener("keyup", function(event) {
@@ -23,9 +20,7 @@ function sendMessage() {
 
   sendMessageToServer(message)
     .then(botResponse => {
-      // Formata a resposta do bot com Markdown antes de exibir
-      const formattedResponse = marked.parse(botResponse); 
-      displayMessage(formattedResponse, 'bot'); 
+      displayMessage(botResponse, 'bot');
     })
     .catch(error => {
       console.error('Erro ao enviar mensagem para o servidor:', error);
@@ -37,30 +32,12 @@ function displayMessage(message, sender) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message');
 
-  if (sender === 'user') {
-    messageElement.textContent = message;
-    messageElement.classList.add('user-message');
-  } else if (sender === 'bot') {
-    // Primeiro, processa o Markdown
-    let formattedMessage = marked.parse(message);
-
-    // Verifica se a mensagem contém opções (lista numerada)
-    if (formattedMessage.includes("1.")) {
-      // Divide a mensagem em parágrafos para encontrar as opções
-      const paragraphs = formattedMessage.split('<p>');
-
-      formattedMessage = paragraphs.map(paragraph => {
-        // Se o parágrafo começar com um número seguido de ".", formata como lista
-        if (/^\d+\./.test(paragraph.trim())) {
-          return `<ul><li>${paragraph.trim()}</li></ul>`;
-        } else {
-          return `<p>${paragraph}</p>`; // Mantém os outros parágrafos como estão
-        }
-      }).join('');
-    }
-
-    messageElement.innerHTML = formattedMessage;
-    messageElement.classList.add('bot-message');
+  if (sender === 'user') { 
+    messageElement.textContent = message; // Mensagem do usuário como texto
+    messageElement.classList.add('user-message'); 
+  } else if (sender === 'bot') { 
+    messageElement.innerHTML = marked.parse(message); // Mensagem do bot com Markdown
+    messageElement.classList.add('bot-message'); 
   }
 
   chatMessages.appendChild(messageElement);
@@ -84,16 +61,7 @@ async function sendMessageToServer(message) {
     }
 
     const data = await response.json();
-
-    // Formata as opções como uma lista numerada
-    if (data.options && Array.isArray(data.options)) {
-      const optionsText = data.options.map((option, index) => `${index + 1}. ${option}`).join('\n');
-      return `${data.greetings}\n\n${optionsText}`;
-    } else {
-      // Se não houver opções, retorna a saudação padrão
-      return data.greetings || "Hmm, não entendi. Pode reformular a pergunta?";
-    }
-
+    return data.resposta;
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
   }
