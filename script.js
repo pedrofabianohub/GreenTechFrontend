@@ -20,7 +20,6 @@ function sendMessage() {
 
   sendMessageToServer(message)
     .then(botResponse => {
-      // Formata a resposta do bot antes de exibir
       const formattedResponse = formatText(botResponse); 
       displayMessage(formattedResponse, 'bot');
     })
@@ -59,7 +58,7 @@ async function sendMessageToServer(message) {
 // Função para formatar o texto da resposta do bot
 function formatText(text) {
   // 1. Quebras de linha em <br>
-  let formattedText = text.replace(/\n/g, '<br>'); 
+  let formattedText = text.replace(/(\r\n|\n|\r)/gm, '<br>');
 
   // 2. Formatação adicional (se necessário) - Exemplo: emojis
   formattedText = formattedText.replace(/:\)/g, '😊');
