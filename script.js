@@ -68,15 +68,14 @@ async function sendMessageToServer(message) {
 
     const data = await response.json();
 
-    // Lógica para extrair a resposta da IA (adicionado)
-    for (const chave in data) {
-      if (typeof data[chave] === 'string') {
-        return data[chave];
-      }
+    // Formata as opções como uma lista numerada
+    if (data.options && Array.isArray(data.options)) {
+      const optionsText = data.options.map((option, index) => `${index + 1}. ${option}`).join('\n');
+      return `${data.greetings}\n\n${optionsText}`;
+    } else {
+      // Se não houver opções, retorna a saudação padrão
+      return data.greetings || "Hmm, não entendi. Pode reformular a pergunta?";
     }
-
-    // Se não encontrar nenhuma string, retorne uma mensagem padrão
-    return "Hmm, não entendi. Pode reformular a pergunta?"; 
 
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
