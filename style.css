@@ -72,21 +72,23 @@ body {
   flex: 1;
   padding: 12px;
   border: 1px solid #ccc;
-  border-radius: 20px;
-  margin-right: 10px;
+  border-radius: 20px 0px 0px 20px;
+  margin-right: -20px;
   font-size: 14px;
 }
 
 #send-btn {
   background-color: transparent;
-  border: none;
+  width: 100px;
+  height: 65px;
   padding: 10px;
+  border: none;
   cursor: pointer;
 }
 
 #send-btn img {
-  width: 20px;
-  height: 20px;
+  width: 100%;
+  height: 100%;
 }
 
 .message p {
