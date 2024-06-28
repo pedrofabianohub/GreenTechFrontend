@@ -5,7 +5,7 @@ const sendBtn = document.getElementById('send-btn');
 sendBtn.addEventListener('click', sendMessage);
 
 userInput.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) { // Enter key
+  if (event.keyCode === 13) { 
     event.preventDefault();
     sendMessage();
   }
@@ -20,8 +20,7 @@ function sendMessage() {
 
   sendMessageToServer(message)
     .then(botResponse => {
-      const formattedResponse = formatText(botResponse); 
-      displayMessage(formattedResponse, 'bot');
+      displayMessage(botResponse, 'bot');
     })
     .catch(error => {
       console.error('Erro ao enviar mensagem para o servidor:', error);
@@ -31,39 +30,39 @@ function sendMessage() {
 
 function displayMessage(message, sender) {
   const messageElement = document.createElement('div');
-  messageElement.classList.add('message', `${sender}-message`);
-  // Adiciona a mensagem formatada ao elemento
-  messageElement.innerHTML = message; // Usa innerHTML para interpretar o HTML
+  messageElement.classList.add('message');
+
+  if (sender === 'user') { 
+    messageElement.textContent = message; // Mensagem do usuário como texto
+    messageElement.classList.add('user-message'); 
+  } else if (sender === 'bot') {
+    messageElement.innerHTML = marked.parse(message); // Mensagem do bot com Markdown
+    messageElement.classList.add('bot-message');
+  }
+
   chatMessages.appendChild(messageElement);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+const apiBaseUrl = 'https://green-tech-six.vercel.app/';
+
 async function sendMessageToServer(message) {
-  const response = await fetch('https://green-tech-six.vercel.app/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ mensagem: message })
-  });
+  try {
+    const response = await fetch(`${apiBaseUrl}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ mensagem: message })
+    });
 
-  if (!response.ok) {
-    throw new Error(`Erro na solicitação: ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`Erro na solicitação: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.resposta.texto;
+  } catch (error) {
+    throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
   }
-
-  const data = await response.json();
-  return data.resposta;
-}
-
-// Função para formatar o texto da resposta do bot
-function formatText(text) {
-  // 1. Quebras de linha em <br>
-  let formattedText = text.replace(/(\r\n|\n|\r)/gm, '<br>');
-
-  // 2. Formatação adicional (se necessário) - Exemplo: emojis
-  formattedText = formattedText.replace(/:\)/g, '😊');
-  formattedText = formattedText.replace(/;\)/g, '😉');
-  // Adicione mais formatações conforme necessário
-
-  return formattedText;
 }
