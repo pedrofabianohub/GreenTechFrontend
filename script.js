@@ -19,7 +19,13 @@ function sendMessage() {
   userInput.value = '';
 
   sendMessageToServer(message)
-    .then(botResponse => {
+    .then(responseText => { 
+      // 1. Converte a resposta do servidor (string) para um objeto JSON
+      const responseObject = JSON.parse(responseText);
+
+      // 2. Acessa a propriedade 'resposta' do objeto JSON
+      const botResponse = responseObject.resposta;
+
       // Processa a resposta do bot para texto simples
       const plainTextResponse = botResponse.replace(/<[^>]+>/g, ' ').replace(/(\r\n|\n|\r)/gm, " ");
       displayMessage(plainTextResponse, 'bot'); 
@@ -62,8 +68,8 @@ async function sendMessageToServer(message) {
       throw new Error(`Erro na solicitação: ${response.status}`);
     }
 
-    const data = await response.json();
-    return data.resposta;
+    // Retorna o corpo da resposta como texto
+    return await response.text(); 
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
   }
