@@ -38,7 +38,7 @@ function displayMessage(message, sender) {
     messageElement.textContent = message; 
     messageElement.classList.add('user-message'); 
   } else if (sender === 'bot') {
-    messageElement.textContent = message.texto; // Adiciona a resposta como texto
+    messageElement.textContent = message; // Adiciona a resposta como texto
     messageElement.classList.add('bot-message');
   }
 
