@@ -69,7 +69,7 @@ async function sendMessageToServer(message) {
     const data = await response.json();
 
     // Retorna o texto da resposta da API 
-    return data.texto; 
+    return data.resposta; 
 
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
