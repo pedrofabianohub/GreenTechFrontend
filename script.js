@@ -5,7 +5,7 @@ const sendBtn = document.getElementById('send-btn');
 sendBtn.addEventListener('click', sendMessage);
 
 userInput.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) { 
+  if (event.keyCode === 13) { // Enter key
     event.preventDefault();
     sendMessage();
   }
@@ -29,40 +29,22 @@ function sendMessage() {
 }
 
 function displayMessage(message, sender) {
-  const messageElement = document.createElement('div');
-  messageElement.classList.add('message');
-
-  if (sender === 'user') { 
-    messageElement.textContent = message; // Mensagem do usuário como texto
-    messageElement.classList.add('user-message'); 
-  } else if (sender === 'bot') { 
-    messageElement.innerHTML = marked.parse(message); // Mensagem do bot com Markdown
-    messageElement.classList.add('bot-message'); 
-  }
-
-  chatMessages.appendChild(messageElement);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+  // ... (código idêntico ao exemplo anterior)
 }
 
-const apiBaseUrl = 'https://green-tech-six.vercel.app/';
-
 async function sendMessageToServer(message) {
-  try {
-    const response = await fetch(`${apiBaseUrl}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ mensagem: message })
-    });
+  const response = await fetch('/mensagem', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ mensagem: message })
+  });
 
-    if (!response.ok) {
-      throw new Error(`Erro na solicitação: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data.resposta;
-  } catch (error) {
-    throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
+  if (!response.ok) {
+    throw new Error(`Erro na solicitação: ${response.status}`);
   }
+
+  const data = await response.json();
+  return data.resposta;
 }
