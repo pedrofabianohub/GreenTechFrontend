@@ -68,6 +68,7 @@ function displayMessage(message, sender) {
 
       } else {
         botResponse = messageOBJ;
+        messageOBJ = message
       }
 
       // Exibe a resposta formatada em Markdown
