@@ -39,7 +39,9 @@ function displayMessage(message, sender) {
       let botResponse = '';
 
       let messageOBJ = JSON.parse(message)
-      // Verifica se a mensagem é um objeto JSON
+
+      console.log(messageOBJ)
+
       if (typeof messageOBJ === 'object') {
         if (messageOBJ.resposta) {
           botResponse += messageOBJ.resposta + ' ';
