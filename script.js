@@ -20,7 +20,9 @@ function sendMessage() {
 
   sendMessageToServer(message)
     .then(botResponse => {
-      displayMessage(botResponse, 'bot');
+      // Formata a resposta do bot antes de exibir
+      const formattedResponse = formatText(botResponse); 
+      displayMessage(formattedResponse, 'bot');
     })
     .catch(error => {
       console.error('Erro ao enviar mensagem para o servidor:', error);
@@ -31,9 +33,10 @@ function sendMessage() {
 function displayMessage(message, sender) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message', `${sender}-message`);
-  messageElement.textContent = message;
+  // Adiciona a mensagem formatada ao elemento
+  messageElement.innerHTML = message; // Usa innerHTML para interpretar o HTML
   chatMessages.appendChild(messageElement);
-  chatMessages.scrollTop = chatMessages.scrollHeight; // Rola para a última mensagem
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
 async function sendMessageToServer(message) {
@@ -51,4 +54,17 @@ async function sendMessageToServer(message) {
 
   const data = await response.json();
   return data.resposta;
+}
+
+// Função para formatar o texto da resposta do bot
+function formatText(text) {
+  // 1. Quebras de linha em <br>
+  let formattedText = text.replace(/\n/g, '<br>'); 
+
+  // 2. Formatação adicional (se necessário) - Exemplo: emojis
+  formattedText = formattedText.replace(/:\)/g, '😊');
+  formattedText = formattedText.replace(/;\)/g, '😉');
+  // Adicione mais formatações conforme necessário
+
+  return formattedText;
 }
