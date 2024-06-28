@@ -68,8 +68,15 @@ async function sendMessageToServer(message) {
 
     const data = await response.json();
 
-    // Retorna o texto da resposta da API 
-    return data.resposta; 
+    // Lógica para extrair a resposta da IA (adicionado)
+    for (const chave in data) {
+      if (typeof data[chave] === 'string') {
+        return data[chave];
+      }
+    }
+
+    // Se não encontrar nenhuma string, retorne uma mensagem padrão
+    return "Hmm, não entendi. Pode reformular a pergunta?"; 
 
   } catch (error) {
     throw new Error(`Erro ao enviar mensagem para o servidor: ${error.message}`);
