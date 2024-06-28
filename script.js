@@ -38,12 +38,29 @@ function displayMessage(message, sender) {
   messageElement.classList.add('message');
 
   if (sender === 'user') {
-    messageElement.textContent = message; 
-    messageElement.classList.add('user-message'); 
-  } else if (sender === 'bot') { 
-    // A mensagem do bot já está formatada com Markdown, então basta inserir
-    messageElement.innerHTML = message;  
-    messageElement.classList.add('bot-message'); 
+    messageElement.textContent = message;
+    messageElement.classList.add('user-message');
+  } else if (sender === 'bot') {
+    // Primeiro, processa o Markdown
+    let formattedMessage = marked.parse(message);
+
+    // Verifica se a mensagem contém opções (lista numerada)
+    if (formattedMessage.includes("1.")) {
+      // Divide a mensagem em parágrafos para encontrar as opções
+      const paragraphs = formattedMessage.split('<p>');
+
+      formattedMessage = paragraphs.map(paragraph => {
+        // Se o parágrafo começar com um número seguido de ".", formata como lista
+        if (/^\d+\./.test(paragraph.trim())) {
+          return `<ul><li>${paragraph.trim()}</li></ul>`;
+        } else {
+          return `<p>${paragraph}</p>`; // Mantém os outros parágrafos como estão
+        }
+      }).join('');
+    }
+
+    messageElement.innerHTML = formattedMessage;
+    messageElement.classList.add('bot-message');
   }
 
   chatMessages.appendChild(messageElement);
