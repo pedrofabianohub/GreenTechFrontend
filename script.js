@@ -33,10 +33,12 @@ function displayMessage(message, sender) {
   messageElement.classList.add('message');
 
   if (sender === 'user') { 
-    messageElement.textContent = message; // Mensagem do usuário como texto
+    messageElement.textContent = message;
     messageElement.classList.add('user-message'); 
   } else if (sender === 'bot') { 
-    messageElement.innerHTML = marked.parse(message); // Mensagem do bot com Markdown
+    messageElement.innerHTML = JSON.parse(message.map((texto) => {
+      message = message.texto
+    }));
     messageElement.classList.add('bot-message'); 
   }
 
